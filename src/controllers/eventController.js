@@ -294,7 +294,11 @@ const deleteEvent = async (req, res) => {
     });
   } catch (err) {
     console.error("Error deleting event:", err);
-    res.status(500).json({ error: "Failed to delete event" });
+
+    res.status(409).json({
+      error: "Failed to delete event.",
+      note: "This event may be connected to one or more services. Delete the related services first, then try deleting the event again."
+    });
   }
 };
 

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Management Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header centered-header">
+    <h1>Event Management Dashboard</h1>
+  </header>
+
+  <main class="container">
+    <section class="card hero-card">
+      <div class="weather-title-row">
+        <h2>Weather Lookup</h2>
+        <p>Enter an event ID to retrieve weather data for the event venue location.</p>
+      </div>
+
+      <div class="weather-form">
+        <input type="number" id="eventIdInput" placeholder="Enter event ID, example: 1" />
+        <button id="getWeatherBtn">Get Weather</button>
+      </div>
+
+      <div id="weatherResult" class="result-box">
+        <p class="muted">Weather results will appear here.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="clientsTab">Clients</button>
+        <button class="tab-btn" data-tab="venuesTab">Venues</button>
+        <button class="tab-btn" data-tab="eventsTab">Events</button>
+        <button class="tab-btn" data-tab="servicesTab">Services</button>
+      </div>
+
+      <div id="clientsTab" class="tab-content active">
+        <div class="tab-header">
+          <h2>Clients</h2>
+          <div class="tab-actions">
+            <button id="openClientFormBtn">Add Client</button>
+            <button id="loadClientsBtn">Load Clients</button>
+          </div>
+        </div>
+
+        <form id="clientForm" class="form compact-form hidden-form">
+          <input type="hidden" id="clientIdHidden" />
+          <input type="text" id="clientName" placeholder="Client name" required />
+          <input type="email" id="clientEmail" placeholder="Client email" required />
+          <input type="text" id="clientPhone" placeholder="Client phone" />
+          <button type="submit" id="clientSubmitBtn">Save Client</button>
+          <button type="button" class="secondary-btn cancel-form-btn" id="cancelClientFormBtn">Cancel</button>
+        </form>
+
+        <div id="clientMessage" class="message-box"></div>
+        <div id="clientsList" class="list-box"></div>
+      </div>
+
+      <div id="venuesTab" class="tab-content">
+        <div class="tab-header">
+          <h2>Venues</h2>
+          <div class="tab-actions">
+            <button id="openVenueFormBtn">Add Venue</button>
+            <button id="loadVenuesBtn">Load Venues</button>
+          </div>
+        </div>
+
+        <form id="venueForm" class="form compact-form hidden-form">
+          <input type="hidden" id="venueIdHidden" />
+          <input type="text" id="venueName" placeholder="Venue name" required />
+          <input type="text" id="venueAddress" placeholder="Address" required />
+          <input type="text" id="venueCity" placeholder="City" required />
+          <input type="text" id="venueState" placeholder="State, example: IL" required />
+          <input type="text" id="venueZip" placeholder="Zip code" />
+          <input type="number" id="venueCapacity" placeholder="Capacity" />
+          <button type="submit" id="venueSubmitBtn">Save Venue</button>
+          <button type="button" class="secondary-btn cancel-form-btn" id="cancelVenueFormBtn">Cancel</button>
+        </form>
+
+        <div id="venueMessage" class="message-box"></div>
+        <div id="venuesList" class="list-box"></div>
+      </div>
+
+      <div id="eventsTab" class="tab-content">
+        <div class="tab-header">
+          <h2>Events</h2>
+          <div class="tab-actions">
+            <button id="openEventFormBtn">Add Event</button>
+            <button id="loadEventsBtn">Load Events</button>
+          </div>
+        </div>
+
+        <form id="eventForm" class="form compact-form hidden-form">
+          <input type="hidden" id="eventIdHidden" />
+          <input type="text" id="eventName" placeholder="Event name" required />
+          <input type="date" id="eventDate" required />
+          <input type="time" id="startTime" />
+          <input type="time" id="endTime" />
+          <input type="number" id="expectedAttendance" placeholder="Expected attendance" />
+          <input type="text" id="eventStatus" placeholder="Status" value="Scheduled" />
+          <input type="number" id="eventClientId" placeholder="Client ID" required />
+          <input type="number" id="eventVenueId" placeholder="Venue ID" required />
+          <button type="submit" id="eventSubmitBtn">Save Event</button>
+          <button type="button" class="secondary-btn cancel-form-btn" id="cancelEventFormBtn">Cancel</button>
+        </form>
+
+        <div id="eventMessage" class="message-box"></div>
+        <div id="eventsList" class="list-box"></div>
+      </div>
+
+      <div id="servicesTab" class="tab-content">
+        <div class="tab-header">
+          <h2>Services</h2>
+          <div class="tab-actions">
+            <button id="openServiceFormBtn">Add Service</button>
+            <button id="loadServicesBtn">Load Services</button>
+          </div>
+        </div>
+
+        <form id="serviceForm" class="form compact-form hidden-form">
+          <input type="hidden" id="serviceIdHidden" />
+          <input type="number" id="serviceEventId" placeholder="Event ID" required />
+          <input type="text" id="serviceName" placeholder="Service name" required />
+          <input type="text" id="serviceDescription" placeholder="Description" />
+          <input type="text" id="serviceStatus" placeholder="Status" value="Requested" />
+          <button type="submit" id="serviceSubmitBtn">Save Service</button>
+          <button type="button" class="secondary-btn cancel-form-btn" id="cancelServiceFormBtn">Cancel</button>
+        </form>
+
+        <div id="serviceMessage" class="message-box"></div>
+        <div id="servicesList" class="list-box"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

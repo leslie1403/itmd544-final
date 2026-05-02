@@ -91,6 +91,24 @@ const resolvers = {
       return result.recordset.map(formatEventTimes);
     },
 
+    services: async () => {
+      const pool = await poolPromise;
+
+      const result = await pool.request().query(`
+        SELECT
+          service_id,
+          event_id,
+          service_name,
+          description,
+          status,
+          created_at
+        FROM services
+        ORDER BY service_id;
+      `);
+
+      return result.recordset;
+    },
+
     client: async (_, { id }) => {
       const pool = await poolPromise;
 
@@ -141,6 +159,26 @@ const resolvers = {
         `);
 
       return formatEventTimes(result.recordset[0]);
+    },
+
+    service: async (_, { id }) => {
+      const pool = await poolPromise;
+
+      const result = await pool.request()
+        .input("id", sql.Int, id)
+        .query(`
+          SELECT
+            service_id,
+            event_id,
+            service_name,
+            description,
+            status,
+            created_at
+          FROM services
+          WHERE service_id = @id;
+        `);
+
+      return result.recordset[0] || null;
     }
   },
 
@@ -171,6 +209,53 @@ const resolvers = {
         `);
 
       return result.recordset[0] || null;
+    },
+
+    services: async (parent) => {
+      const pool = await poolPromise;
+
+      const result = await pool.request()
+        .input("event_id", sql.Int, parent.event_id)
+        .query(`
+          SELECT
+            service_id,
+            event_id,
+            service_name,
+            description,
+            status,
+            created_at
+          FROM services
+          WHERE event_id = @event_id
+          ORDER BY service_id;
+        `);
+
+      return result.recordset;
+    }
+  },
+
+  Service: {
+    event: async (parent) => {
+      const pool = await poolPromise;
+
+      const result = await pool.request()
+        .input("event_id", sql.Int, parent.event_id)
+        .query(`
+          SELECT 
+            event_id,
+            client_id,
+            venue_id,
+            event_name,
+            event_date,
+            start_time,
+            end_time,
+            expected_attendance,
+            status,
+            created_at
+          FROM events
+          WHERE event_id = @event_id;
+        `);
+
+      return formatEventTimes(result.recordset[0]);
     }
   },
 
@@ -257,6 +342,70 @@ const resolvers = {
         `);
 
       return formatEventTimes(result.recordset[0]);
+    },
+
+    createService: async (_, args) => {
+      const pool = await poolPromise;
+
+      const result = await pool.request()
+        .input("event_id", sql.Int, args.event_id)
+        .input("service_name", sql.VarChar(100), args.service_name)
+        .input("description", sql.VarChar(255), args.description || null)
+        .input("status", sql.VarChar(50), args.status || "Requested")
+        .query(`
+          INSERT INTO services (
+            event_id,
+            service_name,
+            description,
+            status
+          )
+          OUTPUT INSERTED.*
+          VALUES (
+            @event_id,
+            @service_name,
+            @description,
+            @status
+          );
+        `);
+
+      return result.recordset[0];
+    },
+
+    updateService: async (_, args) => {
+      const pool = await poolPromise;
+
+      const result = await pool.request()
+        .input("service_id", sql.Int, args.service_id)
+        .input("event_id", sql.Int, args.event_id)
+        .input("service_name", sql.VarChar(100), args.service_name)
+        .input("description", sql.VarChar(255), args.description || null)
+        .input("status", sql.VarChar(50), args.status || "Requested")
+        .query(`
+          UPDATE services
+          SET
+            event_id = @event_id,
+            service_name = @service_name,
+            description = @description,
+            status = @status
+          OUTPUT INSERTED.*
+          WHERE service_id = @service_id;
+        `);
+
+      return result.recordset[0] || null;
+    },
+
+    deleteService: async (_, { service_id }) => {
+      const pool = await poolPromise;
+
+      const result = await pool.request()
+        .input("service_id", sql.Int, service_id)
+        .query(`
+          DELETE FROM services
+          OUTPUT DELETED.*
+          WHERE service_id = @service_id;
+        `);
+
+      return result.recordset[0] || null;
     }
   }
 };

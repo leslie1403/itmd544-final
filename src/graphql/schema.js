@@ -31,15 +31,29 @@ const typeDefs = `#graphql
     created_at: String
     client: Client
     venue: Venue
+    services: [Service]
+  }
+
+  type Service {
+    service_id: ID!
+    event_id: ID!
+    service_name: String!
+    description: String
+    status: String
+    created_at: String
+    event: Event
   }
 
   type Query {
     clients: [Client]
     venues: [Venue]
     events: [Event]
+    services: [Service]
+
     client(id: ID!): Client
     venue(id: ID!): Venue
     event(id: ID!): Event
+    service(id: ID!): Service
   }
 
   type Mutation {
@@ -67,6 +81,23 @@ const typeDefs = `#graphql
     ): Event
 
     deleteEvent(event_id: ID!): Event
+
+    createService(
+      event_id: ID!
+      service_name: String!
+      description: String
+      status: String
+    ): Service
+
+    updateService(
+      service_id: ID!
+      event_id: ID!
+      service_name: String!
+      description: String
+      status: String
+    ): Service
+
+    deleteService(service_id: ID!): Service
   }
 `;
 

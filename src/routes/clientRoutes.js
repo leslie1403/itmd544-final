@@ -3,10 +3,16 @@ const router = express.Router();
 
 const {
   getAllClients,
-  getEventsByClient
+  getClientById,
+  createClient,
+  updateClient,
+  deleteClient
 } = require("../controllers/clientController");
 
 router.get("/", getAllClients);
-router.get("/:clientId/events", getEventsByClient);
+router.get("/:clientId", getClientById);
+router.post("/", createClient);
+router.put("/:clientId", updateClient);
+router.delete("/:clientId", deleteClient);
 
 module.exports = router;
