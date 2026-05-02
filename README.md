@@ -56,8 +56,6 @@ Main API features include:
 - Query related data through GraphQL
 - Return helpful error messages for invalid requests or protected records
 
-## REST API Endpoints
-
 ### Clients
 
 | Method | Endpoint | Description |
